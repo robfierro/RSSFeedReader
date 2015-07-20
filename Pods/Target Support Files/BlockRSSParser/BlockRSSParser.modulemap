@@ -1,0 +1,6 @@
+framework module BlockRSSParser {
+  umbrella header "BlockRSSParser-umbrella.h"
+
+  export *
+  module * { export * }
+}

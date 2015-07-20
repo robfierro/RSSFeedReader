@@ -8,8 +8,15 @@
 
 #import "MasterViewController.h"
 #import "DetailViewController.h"
+#import "LoadingView.h"
+#import "RSSParser.h"
 
 @interface MasterViewController ()
+
+@property (nonatomic, strong) UIView *loadingView;
+@property (nonatomic, strong) NSArray *images;
+@property (nonatomic, strong) NSArray *feedItems;
+
 
 @end
 
@@ -26,11 +33,55 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    [[LoadingView sharedLoadingView] showWithMessage:@"Loading RRS Feeds for you! Please wait!"];
+    
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    
+    // Get the feeds
+    [self readRSSFeed];
+}
+
+#pragma mark RSS Feed methods
+
+- (void)readRSSFeed {
+    NSLog(@"Loading RSS Feed...");
+    
+    NSURLRequest *req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://news.google.com/?output=rss"]];
+    [RSSParser parseRSSFeedForRequest:req success:^(NSArray *feedItems) {
+        NSLog(@"RSS Feed: Found %lu RSS Items", (unsigned long)[feedItems count]);
+        
+        self.feedItems = feedItems;
+        [self loadImagesFromArray:feedItems];
+        [[LoadingView sharedLoadingView] dismiss];
+        
+    } failure:^(NSError *error) {
+        NSLog(@"RSS Feed Error! : %@", [error localizedDescription]);
+        [[LoadingView sharedLoadingView] dismiss];
+        
+    }];
+}
+
+- (void)loadImagesFromArray:(NSArray *)array {
+    NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
+    for (RSSItem *item in array) {
+        if ([[item imagesFromItemDescription] count] > 0) {
+            NSString *urlString = [item imagesFromItemDescription][0];
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]]];
+            if (image) {
+                [mutableArray addObject:image];
+            }
+        }
+        else {
+            [mutableArray addObject:[NSNull null]];
+        }
+    }
+    self.images = [NSArray arrayWithArray:mutableArray];
+    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {

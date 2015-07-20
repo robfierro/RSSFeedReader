@@ -20,16 +20,20 @@ PODS:
   - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - BlockRSSParser (2.1):
+    - AFNetworking (~> 2.0)
   - GDataXML-HTML (1.2.0)
   - OCMock (3.1.2)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5)
+  - BlockRSSParser (~> 2.1)
   - GDataXML-HTML (~> 1.2.0)
   - OCMock (~> 3.1)
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  BlockRSSParser: aedf3ab9a6c92f8d0881b9415fe88b5e136ab174
   GDataXML-HTML: dac3692417e9fc612f8e12d8baae3706fccedcc8
   OCMock: a10ea9f0a6e921651f96f78b6faee95ebc813b92
 

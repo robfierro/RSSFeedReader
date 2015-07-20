@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DAE7D797305EB63E5BE8797A"
-               BuildableName = "Pods_RSS_Feed_Reader.framework"
-               BlueprintName = "Pods-RSS Feed Reader"
+               BlueprintIdentifier = "BB414038B8EC047AC993FC80"
+               BuildableName = "BlockRSSParser.framework"
+               BlueprintName = "BlockRSSParser"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

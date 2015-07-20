@@ -17,6 +17,7 @@
 		E114E8D41B5B602200CE4691 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E114E8D31B5B602200CE4691 /* Images.xcassets */; };
 		E114E8D71B5B602200CE4691 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E114E8D51B5B602200CE4691 /* LaunchScreen.xib */; };
 		E114E8E31B5B602200CE4691 /* RSS_Feed_ReaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E114E8E21B5B602200CE4691 /* RSS_Feed_ReaderTests.m */; };
+		E114E8EE1B5CA23A00CE4691 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = E114E8ED1B5CA23A00CE4691 /* LoadingView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,8 @@
 		E114E8DC1B5B602200CE4691 /* RSS Feed ReaderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RSS Feed ReaderTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E114E8E11B5B602200CE4691 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E114E8E21B5B602200CE4691 /* RSS_Feed_ReaderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RSS_Feed_ReaderTests.m; sourceTree = "<group>"; };
+		E114E8EC1B5CA23A00CE4691 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
+		E114E8ED1B5CA23A00CE4691 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +115,8 @@
 				E114E8D51B5B602200CE4691 /* LaunchScreen.xib */,
 				E114E8C71B5B602200CE4691 /* RSS_Feed_Reader.xcdatamodeld */,
 				E114E8C01B5B602200CE4691 /* Supporting Files */,
+				E114E8EC1B5CA23A00CE4691 /* LoadingView.h */,
+				E114E8ED1B5CA23A00CE4691 /* LoadingView.m */,
 			);
 			path = "RSS Feed Reader";
 			sourceTree = "<group>";
@@ -303,6 +308,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E114E8CF1B5B602200CE4691 /* DetailViewController.m in Sources */,
+				E114E8EE1B5CA23A00CE4691 /* LoadingView.m in Sources */,
 				E114E8CC1B5B602200CE4691 /* MasterViewController.m in Sources */,
 				E114E8C91B5B602200CE4691 /* RSS_Feed_Reader.xcdatamodeld in Sources */,
 				E114E8C61B5B602200CE4691 /* AppDelegate.m in Sources */,

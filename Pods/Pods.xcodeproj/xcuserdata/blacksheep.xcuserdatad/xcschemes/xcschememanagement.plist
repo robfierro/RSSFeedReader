@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>BlockRSSParser.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>GDataXML-HTML.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -27,22 +32,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>19623D92904116847B1174CD98289076</key>
+		<key>5E2B0B5C439222E42BC116EA7FABBD8C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3F6CF4A8F53C9A0B747ECD58D17FB4C7</key>
+		<key>9F420DE60964D5DD9B8D02B0C042E938</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>67E39C3D4D5E80CD894B6683297025BA</key>
+		<key>A1E33F1A343F5C4CBC7D94DB2FBF0634</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D9D92D614EEEA8E1E9C2544FFE45C8F8</key>
+		<key>BF73A6BF82475B23A5503FC9F394A231</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DB56C18FCF8E72361C3FA17CFA96621E</key>
 		<dict>
 			<key>primary</key>
 			<true/>

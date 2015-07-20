@@ -53,11 +53,13 @@ code_sign_if_enabled() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods-RSS Feed Reader/AFNetworking.framework'
+  install_framework 'Pods-RSS Feed Reader/BlockRSSParser.framework'
   install_framework 'Pods-RSS Feed Reader/GDataXML_HTML.framework'
   install_framework 'Pods-RSS Feed Reader/OCMock.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-RSS Feed Reader/AFNetworking.framework'
+  install_framework 'Pods-RSS Feed Reader/BlockRSSParser.framework'
   install_framework 'Pods-RSS Feed Reader/GDataXML_HTML.framework'
   install_framework 'Pods-RSS Feed Reader/OCMock.framework'
 fi
