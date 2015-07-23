@@ -80,9 +80,11 @@ static LoadingView *sharedInstance = nil;
     return self;
 }
 
-- (void)show{
+- (void)show {
+    
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate.masterNavigationController.view addSubview:self];
+    
 }
 
 - (void)showWithMessage:(NSString* )message{

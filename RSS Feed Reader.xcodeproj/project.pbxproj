@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B634A4555BE23D7B24971B25 /* Pods_RSS_Feed_Reader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40526F4D04D1A370FA3EEA04 /* Pods_RSS_Feed_Reader.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		E1042E0E1B609E5F0044C57D /* RSSFeedTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E1042E0D1B609E5F0044C57D /* RSSFeedTableViewCell.m */; };
 		E114E8C31B5B602200CE4691 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E114E8C21B5B602200CE4691 /* main.m */; };
 		E114E8C61B5B602200CE4691 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E114E8C51B5B602200CE4691 /* AppDelegate.m */; };
 		E114E8C91B5B602200CE4691 /* RSS_Feed_Reader.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E114E8C71B5B602200CE4691 /* RSS_Feed_Reader.xcdatamodeld */; };
@@ -34,6 +35,8 @@
 		168C803002CF3CB4CAC43641 /* Pods-RSS Feed Reader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RSS Feed Reader.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RSS Feed Reader/Pods-RSS Feed Reader.debug.xcconfig"; sourceTree = "<group>"; };
 		40526F4D04D1A370FA3EEA04 /* Pods_RSS_Feed_Reader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RSS_Feed_Reader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5B129F11A5417CEADDD4A30 /* Pods-RSS Feed Reader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RSS Feed Reader.release.xcconfig"; path = "Pods/Target Support Files/Pods-RSS Feed Reader/Pods-RSS Feed Reader.release.xcconfig"; sourceTree = "<group>"; };
+		E1042E0C1B609E5F0044C57D /* RSSFeedTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSSFeedTableViewCell.h; sourceTree = "<group>"; };
+		E1042E0D1B609E5F0044C57D /* RSSFeedTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSSFeedTableViewCell.m; sourceTree = "<group>"; };
 		E114E8BD1B5B602200CE4691 /* RSS Feed Reader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RSS Feed Reader.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E114E8C11B5B602200CE4691 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E114E8C21B5B602200CE4691 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -117,6 +120,8 @@
 				E114E8C01B5B602200CE4691 /* Supporting Files */,
 				E114E8EC1B5CA23A00CE4691 /* LoadingView.h */,
 				E114E8ED1B5CA23A00CE4691 /* LoadingView.m */,
+				E1042E0C1B609E5F0044C57D /* RSSFeedTableViewCell.h */,
+				E1042E0D1B609E5F0044C57D /* RSSFeedTableViewCell.m */,
 			);
 			path = "RSS Feed Reader";
 			sourceTree = "<group>";
@@ -307,6 +312,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1042E0E1B609E5F0044C57D /* RSSFeedTableViewCell.m in Sources */,
 				E114E8CF1B5B602200CE4691 /* DetailViewController.m in Sources */,
 				E114E8EE1B5CA23A00CE4691 /* LoadingView.m in Sources */,
 				E114E8CC1B5B602200CE4691 /* MasterViewController.m in Sources */,

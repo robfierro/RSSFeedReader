@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Master-->
@@ -74,30 +75,63 @@
         <scene sceneID="smW-Zh-WAh">
             <objects>
                 <tableViewController title="Master" clearsSelectionOnViewWillAppear="NO" id="7bK-jq-Zjz" customClass="MasterViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="r7i-6Z-zg0">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="160" sectionHeaderHeight="22" sectionFooterHeight="22" id="r7i-6Z-zg0">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="Arm-wq-HPj" style="IBUITableViewCellStyleDefault" id="WCw-Qf-5nD">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RSSFeedTableViewCellIdentifier" rowHeight="160" id="935-LP-3RD" customClass="RSSFeedTableViewCell">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WCw-Qf-5nD" id="37f-cq-3Eg">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="935-LP-3RD" id="vD5-Qa-ody">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Arm-wq-HPj">
-                                            <rect key="frame" x="15" y="0.0" width="290" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IQF-bf-XbO" userLabel="ImageView">
+                                            <rect key="frame" x="8" y="8" width="120" height="143"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="120" id="xH5-IQ-fbB"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ja-DL-nuE" userLabel="Label Title">
+                                            <rect key="frame" x="136" y="8" width="448" height="16"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pgJ-Zs-FyF">
+                                            <rect key="frame" x="136" y="26" width="448" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.4437736742424242" green="0.4437736742424242" blue="0.4437736742424242" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gtk-nL-2bk">
+                                            <rect key="frame" x="136" y="52" width="448" height="91"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="7ja-DL-nuE" firstAttribute="leading" secondItem="IQF-bf-XbO" secondAttribute="trailing" constant="8" id="0RP-ej-juB"/>
+                                        <constraint firstItem="IQF-bf-XbO" firstAttribute="bottom" secondItem="vD5-Qa-ody" secondAttribute="bottomMargin" id="3DF-RK-8BJ"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="pgJ-Zs-FyF" secondAttribute="trailing" constant="8" id="6x3-3a-4ui"/>
+                                        <constraint firstItem="7ja-DL-nuE" firstAttribute="top" secondItem="vD5-Qa-ody" secondAttribute="topMargin" id="ABp-dl-cmW"/>
+                                        <constraint firstItem="IQF-bf-XbO" firstAttribute="top" secondItem="vD5-Qa-ody" secondAttribute="topMargin" id="JRO-Ki-At6"/>
+                                        <constraint firstItem="pgJ-Zs-FyF" firstAttribute="leading" secondItem="IQF-bf-XbO" secondAttribute="trailing" constant="8" id="L0u-NG-RAZ"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="gtk-nL-2bk" secondAttribute="bottom" constant="8" id="Ndf-au-jSX"/>
+                                        <constraint firstItem="gtk-nL-2bk" firstAttribute="top" secondItem="pgJ-Zs-FyF" secondAttribute="bottom" constant="12" id="SIr-yA-YkN"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="7ja-DL-nuE" secondAttribute="trailing" constant="8" id="Y2J-Ve-i5A"/>
+                                        <constraint firstItem="IQF-bf-XbO" firstAttribute="leading" secondItem="vD5-Qa-ody" secondAttribute="leadingMargin" id="YuI-Q4-6NG"/>
+                                        <constraint firstItem="pgJ-Zs-FyF" firstAttribute="top" secondItem="7ja-DL-nuE" secondAttribute="bottom" constant="2" id="eK6-s6-xvr"/>
+                                        <constraint firstItem="gtk-nL-2bk" firstAttribute="leading" secondItem="IQF-bf-XbO" secondAttribute="trailing" constant="8" id="lXs-K8-mhs"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="gtk-nL-2bk" secondAttribute="trailing" constant="8" id="oVY-7a-lrb"/>
+                                    </constraints>
                                 </tableViewCellContentView>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <segue destination="vC3-pB-5Vb" kind="showDetail" identifier="showDetail" id="6S0-TO-JiA"/>
+                                    <outlet property="descriptionLabel" destination="gtk-nL-2bk" id="6sf-YB-v2V"/>
+                                    <outlet property="feedImageView" destination="IQF-bf-XbO" id="xK0-ih-4CK"/>
+                                    <outlet property="sourceLabel" destination="pgJ-Zs-FyF" id="6GV-sw-20N"/>
+                                    <outlet property="titleLabel" destination="7ja-DL-nuE" id="R0P-HL-8a1"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -129,7 +163,4 @@
             <point key="canvasLocation" x="-45" y="129"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="6S0-TO-JiA"/>
-    </inferredMetricsTieBreakers>
 </document>
