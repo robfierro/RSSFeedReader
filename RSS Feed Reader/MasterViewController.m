@@ -10,12 +10,21 @@
 #import "DetailViewController.h"
 #import "LoadingView.h"
 #import "RSSParser.h"
+#import "RSSFeedTableViewCell.h"
+#include <stdlib.h>
+
+typedef NS_ENUM (NSInteger, RSSFeedItemImageType){
+    RSSFeedItemImageTypeDescription,
+    RSSFeedItemImageTypeContent
+};
 
 @interface MasterViewController ()
 
+@property (nonatomic, assign, getter=isRssFeedRequestSucceeded) BOOL rssFeedRequestSucceeded;
+
 @property (nonatomic, strong) UIView *loadingView;
 @property (nonatomic, strong) NSArray *images;
-@property (nonatomic, strong) NSArray *feedItems;
+@property (nonatomic, strong) NSArray *rssFeedItems;
 
 
 @end
@@ -33,14 +42,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
+    // Show loading view
     [[LoadingView sharedLoadingView] showWithMessage:@"Loading RRS Feeds for you! Please wait!"];
     
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-    self.navigationItem.rightBarButtonItem = addButton;
-    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+//    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+//
+//    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
+//    self.navigationItem.rightBarButtonItem = addButton;
+    
     
     // Get the feeds
     [self readRSSFeed];
@@ -49,39 +60,69 @@
 #pragma mark RSS Feed methods
 
 - (void)readRSSFeed {
+    
     NSLog(@"Loading RSS Feed...");
     
     NSURLRequest *req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://news.google.com/?output=rss"]];
-    [RSSParser parseRSSFeedForRequest:req success:^(NSArray *feedItems) {
-        NSLog(@"RSS Feed: Found %lu RSS Items", (unsigned long)[feedItems count]);
+    
+    [RSSParser parseRSSFeedForRequest:req success:^(NSArray *rssFeedItems) {
         
-        self.feedItems = feedItems;
-        [self loadImagesFromArray:feedItems];
+        NSLog(@"RSS Feed: Found %lu RSS Items", (unsigned long)[rssFeedItems count]);
+        self.rssFeedItems = rssFeedItems;
+        self.rssFeedRequestSucceeded = YES;
+        [self.tableView reloadData];
         [[LoadingView sharedLoadingView] dismiss];
         
     } failure:^(NSError *error) {
+        
         NSLog(@"RSS Feed Error! : %@", [error localizedDescription]);
-        [[LoadingView sharedLoadingView] dismiss];
+        NSString *errorString = [NSString stringWithFormat:@"Oops!! %@... try again later :)", [error localizedDescription]];
+        self.rssFeedRequestSucceeded = NO;
+        [self showError:errorString];
         
     }];
 }
 
-- (void)loadImagesFromArray:(NSArray *)array {
-    NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
-    for (RSSItem *item in array) {
-        if ([[item imagesFromItemDescription] count] > 0) {
-            NSString *urlString = [item imagesFromItemDescription][0];
-            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]]];
-            if (image) {
-                [mutableArray addObject:image];
-            }
-        }
-        else {
-            [mutableArray addObject:[NSNull null]];
-        }
+- (void)showError:(NSString *)errorString {
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:errorString preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        
+        [[LoadingView sharedLoadingView] dismiss];
+    
+    }];
+    
+    [alertController addAction:alertAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+-(NSString *)urlStringForImageType:(RSSFeedItemImageType)imageType InRSSItem:(RSSItem *)rssItem {
+    
+    NSArray *imagesFromItemArray = nil;
+    
+    switch (imageType) {
+        case RSSFeedItemImageTypeDescription:
+            imagesFromItemArray = [rssItem imagesFromItemDescription];
+            break;
+        case RSSFeedItemImageTypeContent:
+            imagesFromItemArray = [rssItem imagesFromContent];
+            break;
+        default:
+            break;
     }
-    self.images = [NSArray arrayWithArray:mutableArray];
-    [self.tableView reloadData];
+    
+    NSString *urlString = nil;
+    
+    int count = (int)[imagesFromItemArray count];
+    
+    if (imagesFromItemArray == nil && count > 0) {
+        int randomIndex = arc4random_uniform(count);
+        urlString = [imagesFromItemArray objectAtIndex:randomIndex];
+    }
+    
+    return urlString;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -124,17 +165,38 @@
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    
+    if ([self isRssFeedRequestSucceeded]) {
+        return 1;
+    }
+    
     return [[self.fetchedResultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if ([self isRssFeedRequestSucceeded]) {
+        return [self.rssFeedItems count];
+    }
+    
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    [self configureCell:cell atIndexPath:indexPath];
+    RSSFeedTableViewCell *cell = (RSSFeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"RSSFeedTableViewCellIdentifier" forIndexPath:indexPath];
+    
+    if ([self isRssFeedRequestSucceeded]) {
+        
+        RSSItem *rssItem = [self.rssFeedItems objectAtIndex:[indexPath row]];
+        [self configureCell:cell usingRSSFeedItem:rssItem];
+        
+    } else {
+        
+        NSManagedObject *managedObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        [self configureCell:cell usingManagedObject:managedObject];
+    }
+    
     return cell;
 }
 
@@ -158,9 +220,61 @@
     }
 }
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = [[object valueForKey:@"timeStamp"] description];
+- (void)configureCell:(RSSFeedTableViewCell *)cell usingRSSFeedItem:(RSSItem *)rssItem {
+    
+    cell.titleLabel.text = [self titleFromRSSItem:rssItem];
+    cell.sourceLabel.text = [self sourceFromRSSItem:rssItem];
+    cell.descriptionLabel.text = [self descriptionFromRSSItem:rssItem];
+    
+    
+    //cell.textLabel.text = rssItem.title;
+    NSLog(@"RSS Feed title \n%@\n\n", rssItem.title );
+    NSLog(@"RSS Feed description \n%@\n\n", rssItem.itemDescription );
+    NSLog(@"RSS Feed content \n%@\n\n", rssItem.content );
+    NSLog(@"RSS Feed link \n%@\n\n\n\n", rssItem.link );
+    NSLog(@"RSS Feed author \n%@\n\n\n\n", rssItem.author );
+    
+    
+    
+    
+//    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//    cell.textLabel.text = [[object valueForKey:@"timeStamp"] description];
+}
+
+- (NSString *)titleFromRSSItem:(RSSItem *)rssItem {
+    
+    NSString *title = [[rssItem.title componentsSeparatedByString:@"-"] firstObject];
+    return [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+- (NSString *)sourceFromRSSItem:(RSSItem *)rssItem {
+    
+    NSString *source = [[rssItem.title componentsSeparatedByString:@"-"] lastObject];
+    return [source stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+- (NSString *)descriptionFromRSSItem:(RSSItem *)rssItem {
+    
+    //
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[rssItem.itemDescription dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+    
+    NSString *description = [[attributedString string] stringByReplacingOccurrencesOfString:[self titleFromRSSItem:rssItem] withString:@""];
+    
+    NSLog(@"RSS Feed description string \n%@\n\n\n\n", description);
+    
+    description = [description stringByReplacingOccurrencesOfString:[self sourceFromRSSItem:rssItem] withString:@""];
+    
+    NSLog(@"RSS Feed description string \n%@\n\n\n\n", description);
+    
+    description = [[description componentsSeparatedByString:@"..."] firstObject];
+    
+    NSLog(@"RSS Feed description string \n%@\n\n\n\n", description);
+    
+    return [description stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+- (void)configureCell:(RSSFeedTableViewCell *)cell usingManagedObject:(NSManagedObject *)managedObject {
+    
 }
 
 #pragma mark - Fetched results controller
@@ -173,14 +287,14 @@
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"RSSFeed" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"feedTitle" ascending:NO];
     NSArray *sortDescriptors = @[sortDescriptor];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -202,58 +316,58 @@
     return _fetchedResultsController;
 }    
 
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-{
-    [self.tableView beginUpdates];
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
-{
-    switch(type) {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        default:
-            return;
-    }
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath
-{
-    UITableView *tableView = self.tableView;
-    
-    switch(type) {
-        case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-    }
-}
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    [self.tableView endUpdates];
-}
+//- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+//{
+//    [self.tableView beginUpdates];
+//}
+//
+//- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+//           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
+//{
+//    switch(type) {
+//        case NSFetchedResultsChangeInsert:
+//            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+//            break;
+//            
+//        case NSFetchedResultsChangeDelete:
+//            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+//            break;
+//            
+//        default:
+//            return;
+//    }
+//}
+//
+//- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+//       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+//      newIndexPath:(NSIndexPath *)newIndexPath
+//{
+//    UITableView *tableView = self.tableView;
+//    
+//    switch(type) {
+//        case NSFetchedResultsChangeInsert:
+//            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+//            break;
+//            
+//        case NSFetchedResultsChangeDelete:
+//            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//            break;
+//            
+//        case NSFetchedResultsChangeUpdate:
+//            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+//            break;
+//            
+//        case NSFetchedResultsChangeMove:
+//            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+//            break;
+//    }
+//}
+//
+//- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+//{
+//    [self.tableView endUpdates];
+//}
 
 /*
 // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
